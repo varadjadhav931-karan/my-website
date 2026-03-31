@@ -1,0 +1,104 @@
+<!DOCTYPE html><html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MaisonCare</title>
+<style>
+body {margin:0;font-family:Arial, sans-serif;background:#fff;color:#333;}
+header {position:fixed;width:100%;background:#fff;padding:15px;box-shadow:0 2px 5px rgba(0,0,0,0.1);z-index:1000;text-align:center;font-weight:bold;}
+.hero {height:100vh;background:url('https://www.freepik.com/free-photo/happy-beautiful-couple-posing-with-shopping-bags-violet_18348761.htm#fromView=keyword&page=1&position=0&uuid=b7127cc0-cd3b-49cc-97cb-fa3333f7c7ae&query=Shopping') center/cover no-repeat;display:flex;flex-direction:column;justify-content:center;align-items:center;color:#fff;text-align:center;}
+.hero h1 {font-size:3em;margin:0;}
+.hero button {padding:15px 30px;font-size:18px;border:none;background:#ff4d6d;color:#fff;cursor:pointer;margin-top:20px;border-radius:5px;}
+section {padding:60px 20px;}
+.carousel {display:flex;overflow-x:auto;gap:15px;scroll-behavior:smooth;}
+.product {min-width:250px;border:1px solid #ddd;border-radius:10px;padding:10px;text-align:center;}
+.product img {width:100%;border-radius:10px;}
+button.add {background:#28a745;color:#fff;padding:10px;border:none;margin-top:10px;border-radius:5px;cursor:pointer;}
+.cart {position:fixed;right:0;top:60px;background:#fff;width:300px;height:100%;box-shadow:-2px 0 5px rgba(0,0,0,0.2);padding:15px;overflow-y:auto;}
+input,textarea {width:100%;padding:10px;margin:5px 0;}
+button.send {background:#007bff;color:#fff;padding:12px;border:none;width:100%;cursor:pointer;border-radius:5px;}
+</style>
+</head>
+<body>
+<header>MaisonCare - Glow loud, Glow proud</header><div class="hero">
+<h1>Glow loud, Glow proud</h1>
+<button onclick="scrollToProducts()">Shop Now</button>
+</div><section id="products">
+<h2>Our Products</h2>
+<div class="carousel" id="carousel"></div>
+</section><div class="cart">
+<h3>Your Cart</h3>
+<ul id="cartItems"></ul>
+<input type="text" id="name" placeholder="Your Name" required>
+<input type="text" id="phone" placeholder="Phone Number" required>
+<button class="send" onclick="sendOrder()">Send Order</button>
+<p>WhatsApp: 7972647477</p>
+<p>Location: Nashik</p>
+</div><script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script><script>
+emailjs.init("YOUR_PUBLIC_KEY");
+
+const products = [
+"https://i.ibb.co/KzyYTtKf/Screenshot-2026-03-30-23-02-40-340-edit-com-google-android-googlequicksearchbox.jpg",
+"https://i.ibb.co/sdFpd7s6/Screenshot-2026-03-30-23-03-51-728-edit-com-google-android-googlequicksearchbox.jpg",
+"https://i.ibb.co/TDNvHgpB/Screenshot-2026-03-30-23-04-18-729-edit-com-google-android-googlequicksearchbox.jpg",
+"https://i.ibb.co/7twJkWQB/Screenshot-2026-03-30-23-04-45-180-edit-com-google-android-googlequicksearchbox.jpg",
+"https://i.ibb.co/jkBWZrqH/Screenshot-2026-03-30-23-05-09-987-edit-com-google-android-googlequicksearchbox.jpg",
+"https://i.ibb.co/wFN0bP52/Screenshot-2026-03-30-23-06-08-922-edit-com-google-android-googlequicksearchbox.jpg",
+"https://i.ibb.co/93tZF7dN/Screenshot-2026-03-30-23-06-49-639-edit-com-google-android-googlequicksearchbox.jpg"
+];
+
+const cart = [];
+
+const carousel = document.getElementById("carousel");
+products.forEach((img, index) => {
+const div = document.createElement("div");
+div.className = "product";
+div.innerHTML = `<img src="${img}"><button class='add' onclick='addToCart("Product ${index+1}")'>Add to Cart</button>`;
+carousel.appendChild(div);
+});
+
+function addToCart(item) {
+cart.push(item);
+renderCart();
+}
+
+function renderCart() {
+const list = document.getElementById("cartItems");
+list.innerHTML = "";
+cart.forEach(i => {
+const li = document.createElement("li");
+li.textContent = i;
+list.appendChild(li);
+});
+}
+
+function scrollToProducts() {
+document.getElementById("products").scrollIntoView({behavior:"smooth"});
+}
+
+function sendOrder() {
+const name = document.getElementById("name").value;
+const phone = document.getElementById("phone").value;
+
+if (!name || !phone || cart.length === 0) {
+alert("Please fill all details and add items");
+return;
+}
+
+const templateParams = {
+name: name,
+phone: phone,
+order: cart.join(", ")
+};
+
+emailjs.send("YOUR_SERVICE_ID", "YOUR_TEMPLATE_ID", templateParams)
+.then(() => {
+alert("Order sent successfully!");
+})
+.catch(err => {
+alert("Error sending order");
+console.error(err);
+});
+}
+</script></body>
+</html>
